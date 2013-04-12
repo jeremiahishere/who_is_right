@@ -1,0 +1,37 @@
+<h1>
+  Who was right about the weather?
+</h1>
+<h4>
+  Click on an image to vote.
+</h4>
+<table style="margin-top:-25px;">
+  <tr>
+    <% @people.each do |person| %>
+      <td style="width:300px;padding: 15px;vertical-align:text-top;">
+        <%= image_tag(person.image_name, :data_person_id => person.id, :class => "person_image", :height => 200) %>
+        <p><%= person.description %></p>
+      </td>
+    <% end %>
+  </tr>
+  <tr>
+    <% @people.each do |person| %>
+      <td style="width:300px;padding: 0px 15px;vertical-align:text-top;">
+        <span id="person_<%= person.id %>"><%= (person.vote_percentage * 100).round(2) %></span>
+        % Think <%= person.name %> is right.
+      </td>
+    <% end %>
+  </tr>
+</table>
+<script>
+  $(document).ready(function()  {
+    $(".person_image").click(function()  {
+      var person_id = $(this).attr("data_person_id");
+      $.get("count_vote/" + person_id, function(return_data)  {
+        $.each(return_data, function(key, value) {
+          var percentage = (value * 100);
+          $("#person_" + key).html(percentage.toFixed(2));
+        });
+      });
+    });
+  });
+</script>
